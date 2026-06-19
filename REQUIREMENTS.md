@@ -54,9 +54,8 @@ El sistema tiene un **único rol de administrador**. No hay registro público de
 | Dependencia | Propósito |
 |-------------|-----------|
 | `@graphql-codegen/cli` | CLI del generador |
-| `@graphql-codegen/typescript` | Plugin: tipos base TypeScript |
-| `@graphql-codegen/typescript-operations` | Plugin: tipos por operación (query/mutation) |
-| `@graphql-codegen/typescript-react-apollo` | Plugin: hooks de Apollo tipados |
+| `@graphql-codegen/client-preset` | Preset oficial: types + TypedDocumentNode (incluye todo) |
+| `@graphql-typed-document-node/core` | Peer dep requerido por client-preset |
 
 ### A instalar (recomendados)
 | Dependencia | Propósito |
@@ -177,7 +176,10 @@ ipul-fe/
 │   │   ├── graphql/
 │   │   │   ├── apollo-client.ts       # Instancia de ApolloClient (authLink + errorLink)
 │   │   │   ├── apollo-provider.tsx    # ApolloProvider para Client Components
-│   │   │   ├── generated.ts           # AUTO-GENERADO por codegen — no editar a mano
+│   │   │   ├── __generated__/         # AUTO-GENERADO por codegen — no editar a mano
+│   │   │   │   ├── graphql.ts         # Tipos + TypedDocumentNode por operación
+│   │   │   │   ├── gql.ts             # Helper gql() con tipos
+│   │   │   │   └── index.ts           # Re-exports
 │   │   │   └── operations/            # Archivos .graphql — fuente de verdad de las ops
 │   │   │       ├── parishioner.graphql
 │   │   │       ├── income.graphql
@@ -246,12 +248,14 @@ ipul-fe/
 
 ### Middleware de protección de rutas
 
-Archivo: `middleware.ts` en la raíz del proyecto.
+Archivo: `proxy.ts` en la raíz del proyecto (Next.js 16 renombró `middleware.ts` → `proxy.ts` y la función exportada de `middleware` → `proxy`).
 
 ```typescript
 // Protege todas las rutas bajo (dashboard)
 // Redirige a /login si no hay access_token en cookies
 // Redirige a /dashboard si ya está autenticado y visita /login
+export function proxy(req: NextRequest) { ... }
+export const config = { matcher: [...] };
 ```
 
 ### Contrato REST de autenticación
@@ -649,19 +653,13 @@ schema.gql (del backend) ──┐
 import type { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
-  schema: process.env.NEXT_PUBLIC_GRAPHQL_URL ?? 'http://localhost:3001/graphql',
-  documents: 'src/infrastructure/graphql/operations/**/*.graphql',
+  schema: 'http://localhost:3001/graphql',
+  documents: ['src/infrastructure/graphql/operations/*.graphql'],
   generates: {
-    'src/infrastructure/graphql/generated.ts': {
-      plugins: [
-        'typescript',
-        'typescript-operations',
-        'typescript-react-apollo',
-      ],
+    'src/infrastructure/graphql/__generated__/': {
+      preset: 'client',
       config: {
-        withHooks: true,           // genera useXxxQuery / useXxxMutation
-        withComponent: false,
-        withHOC: false,
+        useTypeImports: true,
       },
     },
   },
@@ -669,6 +667,8 @@ const config: CodegenConfig = {
 
 export default config;
 ```
+
+> **Nota**: `documents` debe apuntar a los `.graphql` usando `*.graphql` (sin `**`) y el output debe ser un directorio FUERA de la carpeta que contiene los documentos — de lo contrario `client-preset` los excluye. El directorio `__generated__/` es ignorado automáticamente por el preset.
 
 Script en `package.json`:
 ```json
@@ -726,20 +726,21 @@ mutation DeleteParishioner($id: ID!) {
 
 ```typescript
 // src/application/parishioners/use-parishioners.hook.ts
-// Los hooks vienen de generated.ts — completamente tipados
+import { useQuery, useMutation } from '@apollo/client';
 import {
-  useGetParishionersQuery,
-  useCreateParishionerMutation,
-} from '@infrastructure/graphql/generated';
+  GetParishionersDocument,
+  CreateParishionerDocument,
+} from '@infrastructure/graphql/__generated__';
 
 export function useParishioners() {
-  const { data, loading, error } = useGetParishionersQuery();
+  const { data, loading, error } = useQuery(GetParishionersDocument);
+  // data.parishioners está completamente tipado — inferido del TypedDocumentNode
   return { parishioners: data?.parishioners ?? [], loading, error };
 }
 ```
 
-> **Regla**: nunca importar desde `generated.ts` en componentes de presentación.
-> Solo los hooks de `application/` consumen el archivo generado.
+> **Regla**: nunca importar desde `__generated__/` en componentes de presentación.
+> Solo los hooks de `application/` consumen los documentos generados.
 
 ---
 

@@ -1,0 +1,70 @@
+/* eslint-disable */
+import * as types from './graphql';
+import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+
+/**
+ * Map of all GraphQL operations in the project.
+ *
+ * This map has several performance disadvantages:
+ * 1. It is not tree-shakeable, so it will include all operations in the project.
+ * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
+ * 3. It does not support dead code elimination, so it will add unused operations.
+ *
+ * Therefore it is highly recommended to use the babel or swc plugin for production.
+ * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
+ */
+type Documents = {
+    "query GetExpenses {\n  expenses {\n    id\n    description\n    amount\n    date\n    category\n    fundSource\n    createdBy\n  }\n}\n\nmutation CreateExpense($input: CreateExpenseInput!, $createdBy: String!) {\n  createExpense(input: $input, createdBy: $createdBy) {\n    id\n    description\n    amount\n    date\n    category\n    fundSource\n    createdBy\n  }\n}": typeof types.GetExpensesDocument,
+    "query GetIncomes {\n  incomes {\n    id\n    type\n    amount\n    date\n    description\n    parishionerId\n    createdBy\n  }\n}\n\nmutation CreateIncome($input: CreateIncomeInput!, $createdBy: String!) {\n  createIncome(input: $input, createdBy: $createdBy) {\n    id\n    type\n    amount\n    date\n    description\n    parishionerId\n    createdBy\n  }\n}": typeof types.GetIncomesDocument,
+    "query GetParishioners {\n  parishioners {\n    id\n    name\n    email\n    phone\n    address\n    baptized\n    createdAt\n    updatedAt\n  }\n}\n\nquery GetParishioner($id: ID!) {\n  parishioner(id: $id) {\n    id\n    name\n    email\n    phone\n    address\n    baptized\n    createdAt\n    updatedAt\n  }\n}\n\nmutation CreateParishioner($input: CreateParishionerInput!) {\n  createParishioner(input: $input) {\n    id\n    name\n    email\n    phone\n    address\n    baptized\n  }\n}\n\nmutation UpdateParishioner($id: ID!, $input: UpdateParishionerInput!) {\n  updateParishioner(id: $id, input: $input) {\n    id\n    name\n    email\n    phone\n    address\n    baptized\n  }\n}\n\nmutation DeleteParishioner($id: ID!) {\n  deleteParishioner(id: $id)\n}": typeof types.GetParishionersDocument,
+    "query GetIncomeReport($filter: ReportFilterInput) {\n  incomeReport(filter: $filter) {\n    byType {\n      type\n      total\n    }\n    grandTotal\n  }\n}\n\nquery GetExpenseReport($filter: ReportFilterInput) {\n  expenseReport(filter: $filter) {\n    byFund {\n      fundSource\n      total\n    }\n    byCategory {\n      category\n      total\n    }\n    grandTotal\n  }\n}\n\nquery GetBalanceReport($filter: ReportFilterInput) {\n  balanceReport(filter: $filter) {\n    byFund {\n      fund\n      totalIncome\n      totalExpense\n      net\n    }\n    totalIncome\n    totalExpense\n    netBalance\n  }\n}": typeof types.GetIncomeReportDocument,
+    "query GetTitheDiscounts {\n  titheDiscounts {\n    id\n    version\n    status\n    effectiveFrom\n    rules\n    createdBy\n    createdAt\n    activatedAt\n  }\n}\n\nquery GetActiveTitheDiscount {\n  activeTitheDiscount {\n    id\n    version\n    status\n    effectiveFrom\n    rules\n    createdBy\n    createdAt\n    activatedAt\n  }\n}\n\nmutation CreateTitheDiscount($input: CreateTitheDiscountInput!, $createdBy: String!) {\n  createTitheDiscount(input: $input, createdBy: $createdBy) {\n    id\n    version\n    status\n    effectiveFrom\n    rules\n    createdBy\n    createdAt\n  }\n}\n\nmutation ActivateTitheDiscount($id: String!) {\n  activateTitheDiscount(id: $id) {\n    id\n    version\n    status\n    activatedAt\n  }\n}": typeof types.GetTitheDiscountsDocument,
+};
+const documents: Documents = {
+    "query GetExpenses {\n  expenses {\n    id\n    description\n    amount\n    date\n    category\n    fundSource\n    createdBy\n  }\n}\n\nmutation CreateExpense($input: CreateExpenseInput!, $createdBy: String!) {\n  createExpense(input: $input, createdBy: $createdBy) {\n    id\n    description\n    amount\n    date\n    category\n    fundSource\n    createdBy\n  }\n}": types.GetExpensesDocument,
+    "query GetIncomes {\n  incomes {\n    id\n    type\n    amount\n    date\n    description\n    parishionerId\n    createdBy\n  }\n}\n\nmutation CreateIncome($input: CreateIncomeInput!, $createdBy: String!) {\n  createIncome(input: $input, createdBy: $createdBy) {\n    id\n    type\n    amount\n    date\n    description\n    parishionerId\n    createdBy\n  }\n}": types.GetIncomesDocument,
+    "query GetParishioners {\n  parishioners {\n    id\n    name\n    email\n    phone\n    address\n    baptized\n    createdAt\n    updatedAt\n  }\n}\n\nquery GetParishioner($id: ID!) {\n  parishioner(id: $id) {\n    id\n    name\n    email\n    phone\n    address\n    baptized\n    createdAt\n    updatedAt\n  }\n}\n\nmutation CreateParishioner($input: CreateParishionerInput!) {\n  createParishioner(input: $input) {\n    id\n    name\n    email\n    phone\n    address\n    baptized\n  }\n}\n\nmutation UpdateParishioner($id: ID!, $input: UpdateParishionerInput!) {\n  updateParishioner(id: $id, input: $input) {\n    id\n    name\n    email\n    phone\n    address\n    baptized\n  }\n}\n\nmutation DeleteParishioner($id: ID!) {\n  deleteParishioner(id: $id)\n}": types.GetParishionersDocument,
+    "query GetIncomeReport($filter: ReportFilterInput) {\n  incomeReport(filter: $filter) {\n    byType {\n      type\n      total\n    }\n    grandTotal\n  }\n}\n\nquery GetExpenseReport($filter: ReportFilterInput) {\n  expenseReport(filter: $filter) {\n    byFund {\n      fundSource\n      total\n    }\n    byCategory {\n      category\n      total\n    }\n    grandTotal\n  }\n}\n\nquery GetBalanceReport($filter: ReportFilterInput) {\n  balanceReport(filter: $filter) {\n    byFund {\n      fund\n      totalIncome\n      totalExpense\n      net\n    }\n    totalIncome\n    totalExpense\n    netBalance\n  }\n}": types.GetIncomeReportDocument,
+    "query GetTitheDiscounts {\n  titheDiscounts {\n    id\n    version\n    status\n    effectiveFrom\n    rules\n    createdBy\n    createdAt\n    activatedAt\n  }\n}\n\nquery GetActiveTitheDiscount {\n  activeTitheDiscount {\n    id\n    version\n    status\n    effectiveFrom\n    rules\n    createdBy\n    createdAt\n    activatedAt\n  }\n}\n\nmutation CreateTitheDiscount($input: CreateTitheDiscountInput!, $createdBy: String!) {\n  createTitheDiscount(input: $input, createdBy: $createdBy) {\n    id\n    version\n    status\n    effectiveFrom\n    rules\n    createdBy\n    createdAt\n  }\n}\n\nmutation ActivateTitheDiscount($id: String!) {\n  activateTitheDiscount(id: $id) {\n    id\n    version\n    status\n    activatedAt\n  }\n}": types.GetTitheDiscountsDocument,
+};
+
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ *
+ *
+ * @example
+ * ```ts
+ * const query = graphql(`query GetUser($id: ID!) { user(id: $id) { name } }`);
+ * ```
+ *
+ * The query argument is unknown!
+ * Please regenerate the types.
+ */
+export function graphql(source: string): unknown;
+
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "query GetExpenses {\n  expenses {\n    id\n    description\n    amount\n    date\n    category\n    fundSource\n    createdBy\n  }\n}\n\nmutation CreateExpense($input: CreateExpenseInput!, $createdBy: String!) {\n  createExpense(input: $input, createdBy: $createdBy) {\n    id\n    description\n    amount\n    date\n    category\n    fundSource\n    createdBy\n  }\n}"): (typeof documents)["query GetExpenses {\n  expenses {\n    id\n    description\n    amount\n    date\n    category\n    fundSource\n    createdBy\n  }\n}\n\nmutation CreateExpense($input: CreateExpenseInput!, $createdBy: String!) {\n  createExpense(input: $input, createdBy: $createdBy) {\n    id\n    description\n    amount\n    date\n    category\n    fundSource\n    createdBy\n  }\n}"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "query GetIncomes {\n  incomes {\n    id\n    type\n    amount\n    date\n    description\n    parishionerId\n    createdBy\n  }\n}\n\nmutation CreateIncome($input: CreateIncomeInput!, $createdBy: String!) {\n  createIncome(input: $input, createdBy: $createdBy) {\n    id\n    type\n    amount\n    date\n    description\n    parishionerId\n    createdBy\n  }\n}"): (typeof documents)["query GetIncomes {\n  incomes {\n    id\n    type\n    amount\n    date\n    description\n    parishionerId\n    createdBy\n  }\n}\n\nmutation CreateIncome($input: CreateIncomeInput!, $createdBy: String!) {\n  createIncome(input: $input, createdBy: $createdBy) {\n    id\n    type\n    amount\n    date\n    description\n    parishionerId\n    createdBy\n  }\n}"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "query GetParishioners {\n  parishioners {\n    id\n    name\n    email\n    phone\n    address\n    baptized\n    createdAt\n    updatedAt\n  }\n}\n\nquery GetParishioner($id: ID!) {\n  parishioner(id: $id) {\n    id\n    name\n    email\n    phone\n    address\n    baptized\n    createdAt\n    updatedAt\n  }\n}\n\nmutation CreateParishioner($input: CreateParishionerInput!) {\n  createParishioner(input: $input) {\n    id\n    name\n    email\n    phone\n    address\n    baptized\n  }\n}\n\nmutation UpdateParishioner($id: ID!, $input: UpdateParishionerInput!) {\n  updateParishioner(id: $id, input: $input) {\n    id\n    name\n    email\n    phone\n    address\n    baptized\n  }\n}\n\nmutation DeleteParishioner($id: ID!) {\n  deleteParishioner(id: $id)\n}"): (typeof documents)["query GetParishioners {\n  parishioners {\n    id\n    name\n    email\n    phone\n    address\n    baptized\n    createdAt\n    updatedAt\n  }\n}\n\nquery GetParishioner($id: ID!) {\n  parishioner(id: $id) {\n    id\n    name\n    email\n    phone\n    address\n    baptized\n    createdAt\n    updatedAt\n  }\n}\n\nmutation CreateParishioner($input: CreateParishionerInput!) {\n  createParishioner(input: $input) {\n    id\n    name\n    email\n    phone\n    address\n    baptized\n  }\n}\n\nmutation UpdateParishioner($id: ID!, $input: UpdateParishionerInput!) {\n  updateParishioner(id: $id, input: $input) {\n    id\n    name\n    email\n    phone\n    address\n    baptized\n  }\n}\n\nmutation DeleteParishioner($id: ID!) {\n  deleteParishioner(id: $id)\n}"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "query GetIncomeReport($filter: ReportFilterInput) {\n  incomeReport(filter: $filter) {\n    byType {\n      type\n      total\n    }\n    grandTotal\n  }\n}\n\nquery GetExpenseReport($filter: ReportFilterInput) {\n  expenseReport(filter: $filter) {\n    byFund {\n      fundSource\n      total\n    }\n    byCategory {\n      category\n      total\n    }\n    grandTotal\n  }\n}\n\nquery GetBalanceReport($filter: ReportFilterInput) {\n  balanceReport(filter: $filter) {\n    byFund {\n      fund\n      totalIncome\n      totalExpense\n      net\n    }\n    totalIncome\n    totalExpense\n    netBalance\n  }\n}"): (typeof documents)["query GetIncomeReport($filter: ReportFilterInput) {\n  incomeReport(filter: $filter) {\n    byType {\n      type\n      total\n    }\n    grandTotal\n  }\n}\n\nquery GetExpenseReport($filter: ReportFilterInput) {\n  expenseReport(filter: $filter) {\n    byFund {\n      fundSource\n      total\n    }\n    byCategory {\n      category\n      total\n    }\n    grandTotal\n  }\n}\n\nquery GetBalanceReport($filter: ReportFilterInput) {\n  balanceReport(filter: $filter) {\n    byFund {\n      fund\n      totalIncome\n      totalExpense\n      net\n    }\n    totalIncome\n    totalExpense\n    netBalance\n  }\n}"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "query GetTitheDiscounts {\n  titheDiscounts {\n    id\n    version\n    status\n    effectiveFrom\n    rules\n    createdBy\n    createdAt\n    activatedAt\n  }\n}\n\nquery GetActiveTitheDiscount {\n  activeTitheDiscount {\n    id\n    version\n    status\n    effectiveFrom\n    rules\n    createdBy\n    createdAt\n    activatedAt\n  }\n}\n\nmutation CreateTitheDiscount($input: CreateTitheDiscountInput!, $createdBy: String!) {\n  createTitheDiscount(input: $input, createdBy: $createdBy) {\n    id\n    version\n    status\n    effectiveFrom\n    rules\n    createdBy\n    createdAt\n  }\n}\n\nmutation ActivateTitheDiscount($id: String!) {\n  activateTitheDiscount(id: $id) {\n    id\n    version\n    status\n    activatedAt\n  }\n}"): (typeof documents)["query GetTitheDiscounts {\n  titheDiscounts {\n    id\n    version\n    status\n    effectiveFrom\n    rules\n    createdBy\n    createdAt\n    activatedAt\n  }\n}\n\nquery GetActiveTitheDiscount {\n  activeTitheDiscount {\n    id\n    version\n    status\n    effectiveFrom\n    rules\n    createdBy\n    createdAt\n    activatedAt\n  }\n}\n\nmutation CreateTitheDiscount($input: CreateTitheDiscountInput!, $createdBy: String!) {\n  createTitheDiscount(input: $input, createdBy: $createdBy) {\n    id\n    version\n    status\n    effectiveFrom\n    rules\n    createdBy\n    createdAt\n  }\n}\n\nmutation ActivateTitheDiscount($id: String!) {\n  activateTitheDiscount(id: $id) {\n    id\n    version\n    status\n    activatedAt\n  }\n}"];
+
+export function graphql(source: string) {
+  return (documents as any)[source] ?? {};
+}
+
+export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;

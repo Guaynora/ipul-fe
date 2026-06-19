@@ -1,0 +1,11 @@
+query GetIncomes {
+  incomes {
+    id type amount date description parishionerId createdBy
+  }
+}
+
+mutation CreateIncome($input: CreateIncomeInput!, $createdBy: String!) {
+  createIncome(input: $input, createdBy: $createdBy) {
+    id type amount date description parishionerId createdBy
+  }
+}

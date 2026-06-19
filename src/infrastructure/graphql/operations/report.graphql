@@ -1,0 +1,23 @@
+query GetIncomeReport($filter: ReportFilterInput) {
+  incomeReport(filter: $filter) {
+    byType { type total }
+    grandTotal
+  }
+}
+
+query GetExpenseReport($filter: ReportFilterInput) {
+  expenseReport(filter: $filter) {
+    byFund { fundSource total }
+    byCategory { category total }
+    grandTotal
+  }
+}
+
+query GetBalanceReport($filter: ReportFilterInput) {
+  balanceReport(filter: $filter) {
+    byFund { fund totalIncome totalExpense net }
+    totalIncome
+    totalExpense
+    netBalance
+  }
+}

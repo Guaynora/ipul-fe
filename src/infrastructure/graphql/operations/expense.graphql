@@ -1,0 +1,11 @@
+query GetExpenses {
+  expenses {
+    id description amount date category fundSource createdBy
+  }
+}
+
+mutation CreateExpense($input: CreateExpenseInput!, $createdBy: String!) {
+  createExpense(input: $input, createdBy: $createdBy) {
+    id description amount date category fundSource createdBy
+  }
+}

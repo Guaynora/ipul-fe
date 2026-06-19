@@ -1,0 +1,23 @@
+query GetTitheDiscounts {
+  titheDiscounts {
+    id version status effectiveFrom rules createdBy createdAt activatedAt
+  }
+}
+
+query GetActiveTitheDiscount {
+  activeTitheDiscount {
+    id version status effectiveFrom rules createdBy createdAt activatedAt
+  }
+}
+
+mutation CreateTitheDiscount($input: CreateTitheDiscountInput!, $createdBy: String!) {
+  createTitheDiscount(input: $input, createdBy: $createdBy) {
+    id version status effectiveFrom rules createdBy createdAt
+  }
+}
+
+mutation ActivateTitheDiscount($id: String!) {
+  activateTitheDiscount(id: $id) {
+    id version status activatedAt
+  }
+}

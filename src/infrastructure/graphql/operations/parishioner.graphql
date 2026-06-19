@@ -1,0 +1,27 @@
+query GetParishioners {
+  parishioners {
+    id name email phone address baptized createdAt updatedAt
+  }
+}
+
+query GetParishioner($id: ID!) {
+  parishioner(id: $id) {
+    id name email phone address baptized createdAt updatedAt
+  }
+}
+
+mutation CreateParishioner($input: CreateParishionerInput!) {
+  createParishioner(input: $input) {
+    id name email phone address baptized
+  }
+}
+
+mutation UpdateParishioner($id: ID!, $input: UpdateParishionerInput!) {
+  updateParishioner(id: $id, input: $input) {
+    id name email phone address baptized
+  }
+}
+
+mutation DeleteParishioner($id: ID!) {
+  deleteParishioner(id: $id)
+}
