@@ -231,9 +231,11 @@ ipul-fe/
 1. Usuario envía email + password en /login
 2. Next.js Route Handler (POST /api/auth/login) llama al backend REST POST /auth/login
 3. Backend responde { accessToken: string, refreshToken: string }
-4. Route Handler setea dos httpOnly cookies:
-   - access_token  → httpOnly, Secure, SameSite=Strict, maxAge=15*60
-   - refresh_token → httpOnly, Secure, SameSite=Strict, maxAge=7*24*60*60
+4. Route Handler setea dos cookies:
+   - access_token  → httpOnly: FALSE, Secure, SameSite=Strict, maxAge=15*60
+     (debe ser legible por JS para que Apollo Client pueda leerlo con document.cookie)
+   - refresh_token → httpOnly: TRUE, Secure, SameSite=Strict, maxAge=7*24*60*60
+     (nunca necesita ser leído por JS — solo el Route Handler de refresh lo usa)
 5. Apollo Client lee el access_token de cookie (SSR) o lo obtiene del contexto de sesión
 6. Todas las peticiones GraphQL llevan: Authorization: Bearer <access_token>
 ```
@@ -726,11 +728,11 @@ mutation DeleteParishioner($id: ID!) {
 
 ```typescript
 // src/application/parishioners/use-parishioners.hook.ts
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client/react';  // Apollo v4: hooks en /react
 import {
   GetParishionersDocument,
   CreateParishionerDocument,
-} from '@infrastructure/graphql/__generated__';
+} from '@infrastructure/graphql/__generated__/graphql';  // Documents en graphql.ts, no en index
 
 export function useParishioners() {
   const { data, loading, error } = useQuery(GetParishionersDocument);
@@ -739,8 +741,11 @@ export function useParishioners() {
 }
 ```
 
-> **Regla**: nunca importar desde `__generated__/` en componentes de presentación.
-> Solo los hooks de `application/` consumen los documentos generados.
+> **Reglas de import en Apollo v4**:
+> - Hooks (`useQuery`, `useMutation`): importar desde `@apollo/client/react`
+> - Documents generados: importar desde `@infrastructure/graphql/__generated__/graphql` (no desde el barrel `index.ts`)
+> - El scalar `DateTime` se genera como tipo `unknown` — hacer cast explícito a `string` cuando sea necesario
+> - Nunca importar desde `__generated__/` en componentes de presentación — solo los hooks de `application/` los consumen
 
 ---
 
