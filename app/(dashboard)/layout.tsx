@@ -33,8 +33,8 @@ export default function DashboardLayout({
   const { userEmail } = useAuthContext();
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      <aside className="w-64 bg-white shadow-sm flex flex-col">
+    <div className="flex h-screen overflow-hidden bg-gray-100">
+      <aside className="w-64 bg-white shadow-sm flex flex-col shrink-0">
         <div className="p-6 border-b">
           <h1 className="text-xl font-bold text-gray-900">IPUL</h1>
           <p className="text-xs text-gray-500 mt-1">Administración</p>
